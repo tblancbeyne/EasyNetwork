@@ -36,6 +36,10 @@ int main(int argc, char *argv[])
         std::vector<double> inputs;
         inputs.push_back(dis(gen));
         inputs.push_back(dis(gen));
+
+        network.setInputLayer(inputs);
+        network.addHiddenLayer(3);
+        network.createSynapsises();
     }
     return 0;
 }

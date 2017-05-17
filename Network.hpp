@@ -19,6 +19,26 @@ class Network
             setInputLayer(inputs);
 
             // Create synapsises
+            createSynapsises();
+        };
+
+        void addHiddenLayer(std::size_t n, T... param)
+        {
+            hiddenLayers.push_back(Layer<Function>{n,param...});
+        }
+
+        void setInputLayer(const std::vector<double> & inputs)
+        {
+            for (std::size_t i = 0; i < inputs.size(); ++i)
+            {
+                Neuron<Function> neuron = make_neuron<Function>();
+                neuron.setValue(inputs[i]);
+                inputLayer.push_back(neuron);
+            }
+        }
+
+        void createSynapsises()
+        {
             if (hiddenLayers.size() > 0)
             {
                 // First layer
@@ -54,34 +74,37 @@ class Network
                     output.addInput(synapsis);
                 }
             }
-
-        };
-
-        void addHiddenLayer(std::size_t n, T... param)
-        {
-            hiddenLayers.push_back(Layer<Function>{n,param...});
-        }
-
-        void setInputLayer(const std::vector<double> & inputs)
-        {
-            for (std::size_t i = 0; i < inputs.size(); ++i)
+            else
             {
-                Neuron<Function> neuron = make_neuron<Function>();
-                neuron.setValue(inputs[i]);
-                inputLayer.push_back(neuron);
+                // Synapsises between input and output
+                for (std::size_t i = 0; i < inputLayer.size(); ++i)
+                {
+                    auto synapsis = std::make_shared<Synapsis>();
+                }
             }
         }
 
-        void createSynapsises()
+        void update()
         {
+            for (std::size_t i = 0; i < hiddenLayers.size(); ++i)
+            {
+                hiddenLayers[i].updateNeurons();
+            }
+            output.update();
+        }
 
+        void propagate()
+        {
+            error = target - output.getOutput();
+            output.updateSynapsises(error);
         }
 
     private:
         std::vector<ezn::Layer<Function>> hiddenLayers;
         Layer<Function> inputLayer;
         Neuron<Function> output;
-
+        double error;
+        double target;
 };
 
 }

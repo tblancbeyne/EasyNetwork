@@ -26,43 +26,54 @@ class Random
 class Synapsis
 {
     public:
-        Synapsis() : weight(random()), value(0){};
+        Synapsis() : weight(random()), input(0){};
 
         double getOutput() const
         {
-            return value;
+            return input*weight;
+        }
+
+        double getWeight() const
+        {
+            return weight;
         }
 
         void setInput(double input)
         {
-            value = weight*input;
+            this->input = input;
         }
 
         void updateWeight(double deltaOutput)
         {
-            weight -= deltaOutput*weight;
+            weight -= deltaOutput*input;
         }
 
     private:
         static Random random;
         double weight;
-        double value;
+        double input;
 };
 
 template<typename Function>
 class Neuron
 {
     public:
-        Neuron(const Function & f) : input{}, output{}, value(0), function(f) {};
+        Neuron(const Function & f) : input{}, output{}, value(0), result(0.5), function(f) {};
 
         void setValue(double value)
         {
             this->value = value;
+            result = function(value);
         }
 
         double getValue() const
         {
             return value;
+        }
+
+        double getOutputResult() const
+        {
+            return result;
         }
 
         void addInput(const std::shared_ptr<Synapsis> & input)
@@ -81,10 +92,31 @@ class Neuron
             updateOutputs();
         }
 
+        void updateSynapsises(double deltaOutput)
+        {
+            double sum;
+            if (output.size() > 0)
+            {
+                for (std::size_t i = 0; i < output.size(); ++i)
+                {
+                    sum += output[i]->getWeight()*function.prime(value);
+                }
+            }
+            else
+            {
+              sum = 1;
+            }
+            for (std::size_t i = 0; i < input.size(); ++i)
+            {
+                input[i]->updateWeight(deltaOutput*sum);
+            }
+       }
+
     private:
         std::vector<std::shared_ptr<Synapsis>> input;
         std::vector<std::shared_ptr<Synapsis>> output;
         double value;
+        double result;
         Function function;
 
         void updateValue()
@@ -97,7 +129,7 @@ class Neuron
         void updateOutputs()
         {
             for (std::size_t i = 0; i < output.size(); ++i)
-                output[i]->setInput(value);
+                output[i]->setInput(result);
         }
 
 };
