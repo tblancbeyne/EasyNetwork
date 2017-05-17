@@ -60,11 +60,10 @@ class Neuron
             this->value = value;
         }
 
-        void updateValue()
+        void update()
         {
-            value = std::accumulate(input.begin(), input.end(), 0, [](double current, const Synapsis & s){
-                return current + s.getOutput();
-            });
+            updateValue();
+            updateOutputs();
         }
 
     private:
@@ -72,6 +71,20 @@ class Neuron
         std::vector<std::shared_ptr< Synapsis>> output;
         double value;
         Function function;
+
+        void updateValue()
+        {
+            value = std::accumulate(input.begin(), input.end(), 0, [](double current, const Synapsis & s){
+                return current + s.getOutput();
+            });
+        }
+
+        void updateOutputs()
+        {
+            for (std::size_t i = 0; i < output.size(); ++i)
+                output[i]->setInput(value);
+        }
+
 };
 
 template<typename Function>
