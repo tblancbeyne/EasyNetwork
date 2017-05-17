@@ -1,4 +1,4 @@
-SOURCES = main.cpp
+SOURCES = Neuron.cpp main.cpp
 
 OBJECTS = $(SOURCES:.cpp=.o)
 TARGET = main
