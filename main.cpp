@@ -25,6 +25,17 @@ class Sigmoid
 
 int main(int argc, char *argv[])
 {
-    ezn::Network<Sigmoid> network(std::vector<double>(),1,2);
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dis(0,1);
+
+    ezn::Network<Sigmoid> network;
+
+    while (true)
+    {
+        std::vector<double> inputs;
+        inputs.push_back(dis(gen));
+        inputs.push_back(dis(gen));
+    }
     return 0;
 }

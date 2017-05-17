@@ -45,6 +45,14 @@ class Network
                         }
                     }
                 }
+
+                // Last layer
+                for (std::size_t i = 0; i < hiddenLayers[hiddenLayers.size()-1].size(); ++i)
+                {
+                    auto synapsis = std::make_shared<Synapsis>();
+                    hiddenLayers[hiddenLayers.size()-1][i].addOutput(synapsis);
+                    output.addInput(synapsis);
+                }
             }
 
         };
@@ -62,6 +70,11 @@ class Network
                 neuron.setValue(inputs[i]);
                 inputLayer.push_back(neuron);
             }
+        }
+
+        void createSynapsises()
+        {
+
         }
 
     private:

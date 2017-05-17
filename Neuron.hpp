@@ -57,8 +57,12 @@ class Neuron
 
         void setValue(double value)
         {
-            assert(input.size() == 0);
             this->value = value;
+        }
+
+        double getValue() const
+        {
+            return value;
         }
 
         void addInput(const std::shared_ptr<Synapsis> & input)
