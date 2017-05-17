@@ -57,9 +57,9 @@ class Network
 
         };
 
-        void addHiddenLayer(std::size_t n, const Function & f)
+        void addHiddenLayer(std::size_t n, T... param)
         {
-            hiddenLayers.push_back(Layer<Function>{n,f});
+            hiddenLayers.push_back(Layer<Function>{n,param...});
         }
 
         void setInputLayer(const std::vector<double> & inputs)
