@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cmath>
 
-#include "Neuron.hpp"
+#include "Network.hpp"
 
 class Sigmoid
 {
@@ -25,6 +25,6 @@ class Sigmoid
 
 int main(int argc, char *argv[])
 {
-    auto neuron = ezn::make_neuron(Sigmoid{});
+    ezn::Network<Sigmoid> network(std::vector<double>(),1,2);
     return 0;
 }

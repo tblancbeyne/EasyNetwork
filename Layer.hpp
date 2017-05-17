@@ -8,21 +8,24 @@
 namespace ezn
 {
 
-template<typename Function>
-class Layer
+template<typename Function, typename... T>
+class Layer : private std::vector<Neuron<Function>>
 {
     public:
-        Layer() : neurons{} {};
-        Layer(std::size_t n, const Function & f = Function{}) : neurons(n,make_neuron(f)) {};
+        using std::vector<Neuron<Function>>::size;
+        using std::vector<Neuron<Function>>::operator[];
+        using std::vector<Neuron<Function>>::push_back;
+
+        Layer() : std::vector<Neuron<Function>>{} {};
+        Layer(std::size_t n, T... param) : std::vector<Neuron<Function>>(n,make_neuron<Function>(param...)) {};
 
         void updateNeurons()
         {
-            for (std::size_t i = 0; i < neurons.size(); ++i)
-                neurons[i].update();
+            for (std::size_t i = 0; i < size(); ++i)
+                (*this)[i].update();
         }
 
     private:
-        std::vector<ezn::Neuron<Function>> neurons;
 };
 
 }

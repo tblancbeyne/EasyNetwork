@@ -53,11 +53,22 @@ template<typename Function>
 class Neuron
 {
     public:
-        Neuron(const Function & f) : function(f) {}
+        Neuron(const Function & f) : input{}, output{}, value(0), function(f) {};
+
         void setValue(double value)
         {
             assert(input.size() == 0);
             this->value = value;
+        }
+
+        void addInput(const std::shared_ptr<Synapsis> & input)
+        {
+            this->input.push_back(input);
+        }
+
+        void addOutput(const std::shared_ptr<Synapsis> & output)
+        {
+            this->output.push_back(output);
         }
 
         void update()
@@ -67,8 +78,8 @@ class Neuron
         }
 
     private:
-        std::vector<std::shared_ptr< Synapsis>> input;
-        std::vector<std::shared_ptr< Synapsis>> output;
+        std::vector<std::shared_ptr<Synapsis>> input;
+        std::vector<std::shared_ptr<Synapsis>> output;
         double value;
         Function function;
 
@@ -87,10 +98,10 @@ class Neuron
 
 };
 
-template<typename Function>
-Neuron<Function> make_neuron(const Function & f)
+template<typename Function, typename... T>
+Neuron<Function> make_neuron(T... param)
 {
-    return Neuron<Function>(f);
+    return Neuron<Function>(Function(param...));
 }
 
 }
