@@ -2,6 +2,7 @@
 #define NETWORK_HPP
 
 #include <vector>
+#include <iostream>
 
 #include "Layer.hpp"
 
@@ -53,7 +54,7 @@ class Network
                 }
 
                 // Next layers
-                for (std::size_t i = 0; i < hiddenLayers.size(); ++i)
+                for (std::size_t i = 0; i < hiddenLayers.size()-1; ++i)
                 {
                     for (std::size_t j = 0; j < hiddenLayers[i].size(); ++j)
                     {
@@ -91,6 +92,13 @@ class Network
                 hiddenLayers[i].updateNeurons();
             }
             output.update();
+        }
+
+        void updateInputLayer(const std::vector<double> & input)
+        {
+            assert(input.size() == inputLayer.size());
+            for (std::size_t i = 0; i < input.size(); ++i)
+                inputLayer[i].setValue(input[i]);
         }
 
         void propagate()
