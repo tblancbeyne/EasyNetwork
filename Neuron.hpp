@@ -4,6 +4,7 @@
 #include <random>
 #include <memory>
 #include <cassert>
+#include <iostream>
 
 namespace ezn
 {
@@ -71,7 +72,7 @@ class Neuron
             return value;
         }
 
-        double getOutputResult() const
+        double getResult() const
         {
             return result;
         }
@@ -104,7 +105,7 @@ class Neuron
             }
             else
             {
-              sum = 1;
+              sum = function.prime(value);
             }
             for (std::size_t i = 0; i < input.size(); ++i)
             {
@@ -121,9 +122,10 @@ class Neuron
 
         void updateValue()
         {
-            value = std::accumulate(input.begin(), input.end(), 0, [](double current, const Synapsis & s){
-                return current + s.getOutput();
+            value = std::accumulate(input.begin(), input.end(), 0, [](double current, const std::shared_ptr<Synapsis> & s){
+                return current + s->getOutput();
             });
+            result = function(value);
         }
 
         void updateOutputs()

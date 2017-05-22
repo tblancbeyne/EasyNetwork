@@ -1,4 +1,4 @@
-SOURCES = Neuron.cpp Network.cpp Layer.cpp main.cpp
+SOURCES = Layer.cpp main.cpp Neuron.cpp Trainer.cpp Network.cpp
 
 OBJECTS = $(SOURCES:.cpp=.o)
 TARGET = main

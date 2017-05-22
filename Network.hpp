@@ -85,34 +85,37 @@ class Network
             }
         }
 
-        void update()
+        double predict(const std::vector<double> & input)
         {
+            assert(input.size() == inputLayer.size());
+            for (std::size_t i = 0; i < input.size(); ++i)
+                inputLayer[i].setValue(input[i]);
+
             for (std::size_t i = 0; i < hiddenLayers.size(); ++i)
             {
                 hiddenLayers[i].updateNeurons();
             }
             output.update();
+            return output.getResult();
         }
 
-        void updateInputLayer(const std::vector<double> & input)
+        double propagate(double target)
         {
-            assert(input.size() == inputLayer.size());
-            for (std::size_t i = 0; i < input.size(); ++i)
-                inputLayer[i].setValue(input[i]);
-        }
-
-        void propagate()
-        {
-            error = target - output.getOutput();
+            double error = target - output.getResult();
+            inputLayer.propagate(error);
+            for (std::size_t i = 0; i < hiddenLayers.size(); ++i)
+            {
+                hiddenLayers[i].propagate(error);
+            }
             output.updateSynapsises(error);
+
+            return error;
         }
 
     private:
         std::vector<ezn::Layer<Function>> hiddenLayers;
         Layer<Function> inputLayer;
         Neuron<Function> output;
-        double error;
-        double target;
 };
 
 }

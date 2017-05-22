@@ -25,7 +25,7 @@ class Layer : private std::vector<Neuron<Function>>
                 (*this)[i].update();
         }
 
-        void backpropagation(double deltaOutput)
+        void propagate(double deltaOutput)
         {
             for (std::size_t i = 0; i < size(); ++i)
                 (*this)[i].updateSynapsises(deltaOutput);
