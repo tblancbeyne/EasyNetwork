@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
                     inputs[0] = i;
                     inputs[1] = j;
                     double result = network.predict(inputs);
-                    if ((result - (!inputs[0] != !inputs[1])) > 0.001)
+                    if ((result - (inputs[0] != inputs[1])) > 0.001)
                     {
                         trainingNeeded = true;
                     }
@@ -76,6 +76,17 @@ int main(int argc, char *argv[])
         std::cout << "Press enter to continue.";
         std::getline(std::cin,str);
 #endif
+    }
+
+    for (std::size_t i = 0; i <= 1; ++i)
+    {
+        for (std::size_t j = 0; j <= 1; ++j)
+        {
+            inputs[0] = i;
+            inputs[1] = j;
+            double result = network.predict(inputs);
+            std::cout << "Inputs : " << inputs[0] << "," << inputs[1] << ", result: " << result << std::endl;
+        }
     }
 
     std::cout << "The network has been trained." << std::endl;

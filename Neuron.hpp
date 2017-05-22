@@ -42,6 +42,11 @@ class Synapsis
             return weight;
         }
 
+        double getValue() const
+        {
+            return input;
+        }
+
         void setInput(double input)
         {
 #ifdef UPDATE
@@ -109,7 +114,7 @@ class Neuron
             {
                 for (std::size_t i = 0; i < output.size(); ++i)
                 {
-                    sum += output[i]->getWeight()*function.prime(value);
+                    sum += output[i]->getWeight()*function.prime(output[i]->getValue());
                 }
             }
             else
