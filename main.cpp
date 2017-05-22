@@ -25,6 +25,26 @@ class Sigmoid
 
 };
 
+class TanH
+{
+    public:
+        TanH(){};
+        double operator()(double x)
+        {
+            return std::tanh(x);
+        }
+
+        double prime(double x)
+        {
+            return 1 - std::tanh(x)*std::tanh(x);
+        }
+
+    private:
+
+};
+
+
+
 int main(int argc, char *argv[])
 {
     std::random_device rd;
@@ -63,7 +83,7 @@ int main(int argc, char *argv[])
                     inputs[0] = i;
                     inputs[1] = j;
                     double result = network.predict(inputs);
-                    if ((result - (inputs[0] != inputs[1])) > 0.001)
+                    if (fabs(result - (inputs[0] != inputs[1])) > 0.001)
                     {
                         trainingNeeded = true;
                     }
