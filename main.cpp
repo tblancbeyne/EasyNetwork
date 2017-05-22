@@ -1,7 +1,9 @@
 #include <iostream>
 #include <cmath>
 
-#include "Trainer.hpp"
+#include "Network.hpp"
+
+//#define DEBUG
 
 class Sigmoid
 {
@@ -39,10 +41,6 @@ int main(int argc, char *argv[])
     network.addHiddenLayer(3);
     network.createSynapsises();
 
-    ezn::Trainer<Sigmoid> trainer;
-
-    trainer.setNetwork(network);
-
     bool trainingNeeded = true;
 
     while (trainingNeeded)
@@ -50,9 +48,13 @@ int main(int argc, char *argv[])
         inputs[0] = dis(gen);
         inputs[1] = dis(gen);
 
-        if (fabs(trainer.trainNetwork(inputs,!inputs[0] != !inputs[1])) > 0.001)
+        double error = fabs(network.train(inputs,!inputs[0] != !inputs[1]));
+
+        std::cout << "Inputs : " << inputs[0] << "," << inputs[1] << ", error: " << error << std::endl;
+
+        if (error < 0.001)
         {
-            network = trainer.getNetwork();
+            //std::cout << "Testing the training" << std::endl;
             trainingNeeded = false;
             for (std::size_t i = 0; i <= 1; ++i)
             {
@@ -67,11 +69,16 @@ int main(int argc, char *argv[])
                     }
                 }
             }
-
         }
+
+#ifdef DEBUG
+        std::string str;
+        std::cout << "Press enter to continue.";
+        std::getline(std::cin,str);
+#endif
     }
 
-    std::cout << "The network has been trained" << std::endl;
+    std::cout << "The network has been trained." << std::endl;
 
     return 0;
 }

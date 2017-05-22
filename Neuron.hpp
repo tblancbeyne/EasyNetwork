@@ -6,6 +6,9 @@
 #include <cassert>
 #include <iostream>
 
+//#define UPDATE
+//#define PROPAGATE
+
 namespace ezn
 {
 
@@ -41,6 +44,9 @@ class Synapsis
 
         void setInput(double input)
         {
+#ifdef UPDATE
+            std::cout << "Updating the value in the synapsis: " << input << "." << std::endl;
+#endif
             this->input = input;
         }
 
@@ -89,6 +95,9 @@ class Neuron
 
         void update()
         {
+#ifdef UPDATE
+            std::cout << "Updating the neuron." << std::endl;
+#endif
             updateValue();
             updateOutputs();
         }
@@ -122,16 +131,39 @@ class Neuron
 
         void updateValue()
         {
-            value = std::accumulate(input.begin(), input.end(), 0, [](double current, const std::shared_ptr<Synapsis> & s){
-                return current + s->getOutput();
-            });
-            result = function(value);
+#ifdef UPDATE
+            std::cout << "Updating the value of the neuron." << std::endl;
+            std::cout << "Value was: " << value << ", result was: " << result << "." << std::endl;
+#endif
+            if (input.size() > 0)
+            {
+                value = std::accumulate(input.begin(), input.end(), 0.0,
+                                        [](double current, const std::shared_ptr<Synapsis> & s){
+                                            return current + s->getOutput();
+                                        });
+                result = function(value);
+            }
+            else
+            {
+                result = value;
+            }
+#ifdef UPDATE
+            std::cout << "Value is: " << value << ", result is: " << result << "." << std::endl;
+#endif
         }
 
         void updateOutputs()
         {
+#ifdef UPDATE
+            std::cout << "Updating the next synapsises" << std::endl;
+#endif
             for (std::size_t i = 0; i < output.size(); ++i)
+            {
+#ifdef UPDATE
+                std::cout << "Updating synapsis " << i << " with result " << result << "." << std::endl;
+#endif
                 output[i]->setInput(result);
+            }
         }
 
 };

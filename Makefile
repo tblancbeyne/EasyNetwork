@@ -1,11 +1,11 @@
-SOURCES = Layer.cpp main.cpp Neuron.cpp Trainer.cpp Network.cpp
+SOURCES = Layer.cpp main.cpp Neuron.cpp Network.cpp
 
 OBJECTS = $(SOURCES:.cpp=.o)
 TARGET = main
-LIBS = 
+LIBS =
 
-%.o: %.cpp
-	$(CXX) -std=c++14 -o $@ -c $< -Wall 
+%.o: %.cpp Layer.hpp Neuron.hpp Network.hpp
+	$(CXX) -std=c++14 -o $@ -c $< -Wall
 
 all: $(OBJECTS)
 	$(CXX) -std=c++14 -o $(TARGET) $(OBJECTS) $(LIBS) -Wall

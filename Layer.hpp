@@ -5,6 +5,9 @@
 
 #include "Neuron.hpp"
 
+//#define UPDATE
+//#define PROPAGATE
+
 namespace ezn
 {
 
@@ -22,13 +25,23 @@ class Layer : private std::vector<Neuron<Function>>
         void updateNeurons()
         {
             for (std::size_t i = 0; i < size(); ++i)
-                (*this)[i].update();
+            {
+#ifdef UPDATE
+             std::cout << "Updating neuron " << i << " from the layer."<< std::endl;
+#endif
+               (*this)[i].update();
+            }
         }
 
         void propagate(double deltaOutput)
         {
             for (std::size_t i = 0; i < size(); ++i)
+            {
+#ifdef PROPAGATE
+                std::cout << "Propagating " << deltaOutput << " to synapsises from neuron " << i << "." << std::endl;
+#endif
                 (*this)[i].updateSynapsises(deltaOutput);
+            }
         }
 
     private:
