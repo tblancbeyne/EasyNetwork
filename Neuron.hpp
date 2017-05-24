@@ -27,10 +27,12 @@ class Random
         std::uniform_real_distribution<> dis;
 };
 
+
+
 class Synapsis
 {
     public:
-        Synapsis() : weight(random()), input(0){};
+        Synapsis() : weight(random() - 0.5), input(0){};
 
         double getOutput() const
         {
@@ -53,11 +55,22 @@ class Synapsis
             std::cout << "Updating the value in the synapsis: " << input << "." << std::endl;
 #endif
             this->input = input;
+#ifdef UPDATE
+            std::cout << "Result is: " << input << "*" << weight << " = " << getOutput() << "." << std::endl;
+#endif
         }
 
         void updateWeight(double deltaOutput)
         {
-            weight -= deltaOutput*input;
+#ifdef PROPAGATE
+                    std::cout << "Previous weight: " << weight << "." << std::endl;
+                    std::cout << "Delta weight: " << deltaOutput << "*" << input << " = " << deltaOutput*input << "." << std::endl;
+#endif
+
+            weight -= deltaOutput*input*(1 + (random() + random()));
+#ifdef PROPAGATE
+                    std::cout << "New weight: " << weight << "." << std::endl;
+#endif
         }
 
     private:
@@ -70,17 +83,29 @@ template<typename Function>
 class Neuron
 {
     public:
-        Neuron(const Function & f) : input{}, output{}, value(0), result(0.5), function(f) {};
+        Neuron(const Function & f) : input{}, output{}, value(), bias(random()), result(), function(f) {};
 
         void setValue(double value)
         {
             this->value = value;
-            result = function(value);
+            if (input.size() > 0)
+            {
+                result = function(value + bias);
+            }
+            else
+            {
+                result = value;
+            }
         }
 
         double getValue() const
         {
             return value;
+        }
+
+        double getBias() const
+        {
+            return bias;
         }
 
         double getResult() const
@@ -119,18 +144,38 @@ class Neuron
             }
             else
             {
-              sum = function.prime(value);
+                sum = function.prime(value);
             }
+#ifdef PROPAGATE
+            std::cout << "Value of sum: " << sum << "." << std::endl;
+#endif
             for (std::size_t i = 0; i < input.size(); ++i)
-            {
+                    {
                 input[i]->updateWeight(deltaOutput*sum);
             }
-       }
+            bias -= 0.01*deltaOutput;
+            //std::cout << deltaOutput << std::endl;
+        }
+
+        void printWeight(std::size_t n) const
+        {
+            for (std::size_t i = 0; i < output.size(); ++i)
+            {
+                std::cout << "Synapsis between neuron " << n << " and neuron " << i << ": " << output[i]->getWeight() << "." << std::endl;
+            }
+        }
+
+        void printBias() const
+        {
+            std::cout << "Bias for this neuron: " << getBias() << "." << std::endl;
+        }
 
     private:
+        static Random random;
         std::vector<std::shared_ptr<Synapsis>> input;
         std::vector<std::shared_ptr<Synapsis>> output;
         double value;
+        double bias;
         double result;
         Function function;
 
@@ -172,6 +217,9 @@ class Neuron
         }
 
 };
+
+template<typename Function>
+Random Neuron<Function>::random{};
 
 template<typename Function, typename... T>
 Neuron<Function> make_neuron(T... param)

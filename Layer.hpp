@@ -20,7 +20,10 @@ class Layer : private std::vector<Neuron<Function>>
         using std::vector<Neuron<Function>>::push_back;
 
         Layer() : std::vector<Neuron<Function>>{} {};
-        Layer(std::size_t n, T... param) : std::vector<Neuron<Function>>(n,make_neuron<Function>(param...)) {};
+        Layer(std::size_t n, T... param) : Layer()  {
+            for (std::size_t i = 0; i < n; ++i)
+                push_back(make_neuron<Function>(param...));
+        };
 
         void updateNeurons()
         {
@@ -42,6 +45,15 @@ class Layer : private std::vector<Neuron<Function>>
 #endif
                 (*this)[i].updateSynapsises(deltaOutput);
             }
+        }
+
+        void print() const
+        {
+            for (std::size_t i = 0; i < size(); ++i)
+                {
+                    (*this)[i].printWeight(i);
+                    (*this)[i].printBias();
+                }
         }
 
     private:

@@ -170,6 +170,31 @@ class Network
             return propagate(target);
         }
 
+        void print() const
+        {
+            if (hiddenLayers.size() > 0)
+            {
+                std::cout << "Synapsises between inputLayer and hiddenLayers[0]:" << std::endl;
+                inputLayer.print();
+
+                for (std::size_t i = 0; i < hiddenLayers.size()-1; ++i)
+                {
+                    std::cout << "Synapsises between hiddenLayers[" << i << "] and hiddenLayers[" << i+1 << "]:" << std::endl;
+                    hiddenLayers[i].print();
+                }
+
+                std::cout << "Synapsises between hiddenLayers[" << hiddenLayers.size()-1 << "] and ouput neuron:" << std::endl;
+                hiddenLayers[hiddenLayers.size()-1].print();
+            }
+            else
+            {
+                std::cout << "Synapsises between inputLayer and output:" << std::endl;
+                inputLayer.print();
+            }
+
+            std::cout << "Output neuron bias: " << output.getBias() << std::endl;
+        }
+
     private:
         std::vector<ezn::Layer<Function>> hiddenLayers;
         Layer<Function> inputLayer;

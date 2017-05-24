@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cmath>
+#include <string>
 
 #include "Network.hpp"
 
@@ -47,6 +48,8 @@ class TanH
 
 int main(int argc, char *argv[])
 {
+    std::size_t count = 0;
+
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> dis(0,1);
@@ -57,6 +60,7 @@ int main(int argc, char *argv[])
     inputs.push_back(dis(gen));
     inputs.push_back(dis(gen));
 
+
     network.setInputLayer(inputs);
     network.addHiddenLayer(3);
     network.createSynapsises();
@@ -65,14 +69,16 @@ int main(int argc, char *argv[])
 
     while (trainingNeeded)
     {
+        count++;
+
         inputs[0] = dis(gen);
         inputs[1] = dis(gen);
 
         double error = fabs(network.train(inputs,!inputs[0] != !inputs[1]));
 
-        std::cout << "Inputs : " << inputs[0] << "," << inputs[1] << ", error: " << error << std::endl;
+        //std::cout << "Inputs : " << inputs[0] << "," << inputs[1] << ", error: " << error << std::endl;
 
-        if (error < 0.001)
+        if (error < 0.1)
         {
             //std::cout << "Testing the training" << std::endl;
             trainingNeeded = false;
@@ -83,7 +89,7 @@ int main(int argc, char *argv[])
                     inputs[0] = i;
                     inputs[1] = j;
                     double result = network.predict(inputs);
-                    if (fabs(result - (inputs[0] != inputs[1])) > 0.001)
+                    if (fabs(result - (inputs[0] != inputs[1])) > 0.1)
                     {
                         trainingNeeded = true;
                     }
@@ -96,8 +102,25 @@ int main(int argc, char *argv[])
         std::cout << "Press enter to continue.";
         std::getline(std::cin,str);
 #endif
+
+        if (count%100000 == 0)
+        {
+            std::cout << "Iteration " << count << ":" << std::endl;
+            for (std::size_t i = 0; i <= 1; ++i)
+            {
+                for (std::size_t j = 0; j <= 1; ++j)
+                {
+                    inputs[0] = i;
+                    inputs[1] = j;
+                    double result = network.predict(inputs);
+                    std::cout << "Inputs: " << inputs[0] << "," << inputs[1] << ", result: " << result << std::endl;
+                }
+            }
+
+        }
     }
 
+    std::cout << "Results:" << std::endl;
     for (std::size_t i = 0; i <= 1; ++i)
     {
         for (std::size_t j = 0; j <= 1; ++j)
@@ -109,7 +132,10 @@ int main(int argc, char *argv[])
         }
     }
 
-    std::cout << "The network has been trained." << std::endl;
+    std::cout << "The network has been trained with " << count << " iterations." << std::endl;
+
+    std::cout << "Parameters of the network: " << std::endl;
+    network.print();
 
     return 0;
 }
