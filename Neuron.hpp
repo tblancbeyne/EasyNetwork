@@ -132,7 +132,7 @@ class Neuron
             updateOutputs();
         }
 
-        void updateSynapsises(double deltaOutput)
+        void updateSynapses(double deltaOutput)
         {
             double sum;
             if (output.size() > 0)
@@ -153,7 +153,7 @@ class Neuron
                     {
                 input[i]->updateWeight(deltaOutput*sum);
             }
-            bias -= 0.01*deltaOutput;
+            bias -= deltaOutput;
             //std::cout << deltaOutput << std::endl;
         }
 
@@ -205,7 +205,7 @@ class Neuron
         void updateOutputs()
         {
 #ifdef UPDATE
-            std::cout << "Updating the next synapsises" << std::endl;
+            std::cout << "Updating the next synapses" << std::endl;
 #endif
             for (std::size_t i = 0; i < output.size(); ++i)
             {

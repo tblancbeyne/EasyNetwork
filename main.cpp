@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
 
     network.setInputLayer(inputs);
     network.addHiddenLayer(3);
-    network.createSynapsises();
+    network.createSynapses();
 
     bool trainingNeeded = true;
 
@@ -136,6 +136,21 @@ int main(int argc, char *argv[])
 
     std::cout << "Parameters of the network: " << std::endl;
     network.print();
+
+/*    std::cout << "-----------------------" << std::endl;
+
+    while (true)
+    {
+        std::string str;
+        std::cout << "Input[0]=";
+        std::getline(std::cin,str);
+        inputs[0] = std::stoi(str);
+        std::cout << "Input[1]=";
+        std::getline(std::cin,str);
+        inputs[1] = std::stoi(str);
+
+        std::cout << "The network predicted: " << network.predict(inputs) << std::endl;
+    }*/
 
     return 0;
 }

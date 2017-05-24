@@ -24,8 +24,8 @@ class Network
             // Create input layer
             setInputLayer(inputs);
 
-            // Create synapsises
-            createSynapsises();
+            // Create synapses
+            createSynapses();
         };
 
         void addHiddenLayer(std::size_t n, T... param)
@@ -46,7 +46,7 @@ class Network
             }
         }
 
-        void createSynapsises()
+        void createSynapses()
         {
             if (hiddenLayers.size() > 0)
             {
@@ -94,7 +94,7 @@ class Network
             }
             else
             {
-                // Synapsises between input and output
+                // Synapses between input and output
                 for (std::size_t i = 0; i < inputLayer.size(); ++i)
                 {
 #ifdef SYNAPSIS
@@ -148,7 +148,7 @@ class Network
         double propagate(double target)
         {
             double error = output.getResult() - target;
-            // Propagation of error to input target is useless, as it has no input synapsises
+            // Propagation of error to input target is useless, as it has no input synapses
             for (std::size_t i = 0; i < hiddenLayers.size(); ++i)
             {
 #ifdef PROPAGATE
@@ -159,7 +159,7 @@ class Network
 #ifdef PROPAGATE
                 std::cout << "Propagating error to output." << std::endl;
 #endif
-            output.updateSynapsises(error);
+            output.updateSynapses(error);
 
             return error;
         }
@@ -174,21 +174,21 @@ class Network
         {
             if (hiddenLayers.size() > 0)
             {
-                std::cout << "Synapsises between inputLayer and hiddenLayers[0]:" << std::endl;
+                std::cout << "Synapses between inputLayer and hiddenLayers[0]:" << std::endl;
                 inputLayer.print();
 
                 for (std::size_t i = 0; i < hiddenLayers.size()-1; ++i)
                 {
-                    std::cout << "Synapsises between hiddenLayers[" << i << "] and hiddenLayers[" << i+1 << "]:" << std::endl;
+                    std::cout << "Synapses between hiddenLayers[" << i << "] and hiddenLayers[" << i+1 << "]:" << std::endl;
                     hiddenLayers[i].print();
                 }
 
-                std::cout << "Synapsises between hiddenLayers[" << hiddenLayers.size()-1 << "] and ouput neuron:" << std::endl;
+                std::cout << "Synapses between hiddenLayers[" << hiddenLayers.size()-1 << "] and ouput neuron:" << std::endl;
                 hiddenLayers[hiddenLayers.size()-1].print();
             }
             else
             {
-                std::cout << "Synapsises between inputLayer and output:" << std::endl;
+                std::cout << "Synapses between inputLayer and output:" << std::endl;
                 inputLayer.print();
             }
 

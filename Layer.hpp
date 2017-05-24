@@ -41,9 +41,9 @@ class Layer : private std::vector<Neuron<Function>>
             for (std::size_t i = 0; i < size(); ++i)
             {
 #ifdef PROPAGATE
-                std::cout << "Propagating " << deltaOutput << " to synapsises from neuron " << i << "." << std::endl;
+                std::cout << "Propagating " << deltaOutput << " to synapses from neuron " << i << "." << std::endl;
 #endif
-                (*this)[i].updateSynapsises(deltaOutput);
+                (*this)[i].updateSynapses(deltaOutput);
             }
         }
 
